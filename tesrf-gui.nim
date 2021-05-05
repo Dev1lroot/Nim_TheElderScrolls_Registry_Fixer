@@ -1,8 +1,8 @@
-# This example shows several controls of NiGui.
+# This code includes and works with NiGui.
 
 import nigui, os, system, registry, terminal, colors
 
-const HKEY_LOCAL_MACHINE = 2147483650'u;
+const HKEY_LOCAL_MACHINE = 2147483650'u
 
 proc getlocation(game: string):string =
   var o = "Unspecified"
@@ -11,7 +11,6 @@ proc getlocation(game: string):string =
   except:
     o = "Not found"
   return o
-
 
 app.init()
 
@@ -53,7 +52,7 @@ button_set.onClick = proc(event: ClickEvent) =
     try:
       setUnicodeValue("SOFTWARE\\Wow6432Node\\Bethesda Softworks\\" & select_game.value,"Installed Path", input_path.text ,HKEY_LOCAL_MACHINE)
     except:
-       window.alert("Run it as administrator first!")
+       window.alert("The application needs administrator rights to perform the operation!")
   else:
     window.alert("The directory does not exists")
 
