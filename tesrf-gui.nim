@@ -1,8 +1,8 @@
-# This code includes and works with NiGui.
+# Uses the latest version of NiGui
 
-import nigui, os, system, registry, terminal, colors
+import nigui, os, system, registry
 
-const HKEY_LOCAL_MACHINE = 2147483650'u
+const HKEY_LOCAL_MACHINE = 2147483650'u;
 
 proc getlocation(game: string):string =
   var o = "Unspecified"
@@ -11,6 +11,7 @@ proc getlocation(game: string):string =
   except:
     o = "Not found"
   return o
+
 
 app.init()
 
@@ -30,11 +31,8 @@ var select_game = newComboBox(@["Skyrim", "Skyrim Special Edition", "Oblivion"])
 panel_select.add(select_game)
 panel_select.widthMode = WidthMode_Expand
 
-var button_get = newButton("Get value")
-panel_select.add(button_get)
-
-var button_set = newButton("Set value")
-panel_select.add(button_set)
+var apply = newButton("Apply")
+panel_select.add(apply)
 
 var panel_path = newLayoutContainer(Layout_Horizontal)
 panel_path.frame = newFrame("Specify Installed Path")
@@ -44,22 +42,24 @@ container.add(panel_path)
 var input_path = newTextBox("")
 panel_path.add(input_path)
 
-button_get.onClick = proc(event: ClickEvent) =
-  input_path.text = getlocation(select_game.value);
-
-button_set.onClick = proc(event: ClickEvent) =
+apply.onClick = proc(event: ClickEvent) =
   if dirExists(input_path.text):
     try:
       setUnicodeValue("SOFTWARE\\Wow6432Node\\Bethesda Softworks\\" & select_game.value,"Installed Path", input_path.text ,HKEY_LOCAL_MACHINE)
     except:
-       window.alert("The application needs administrator rights to perform the operation!")
+       window.alert("Run it as administrator first!")
   else:
     window.alert("The directory does not exists")
+
+input_path.text = getlocation("Skyrim")
+select_game.onChange = proc(event: ComboBoxChangeEvent) =
+  input_path.text = getlocation(select_game.value)
 
 var label = newLabel("Dev1lroot (C) 2021")
 label.height = 32
 container.add(label)
 
+window.height = 240
 window.show()
 
 app.run()
